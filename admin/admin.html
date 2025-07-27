@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stilistre - Yönetim Paneli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght=700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../Style/admin.css" />
+</head>
+
+<body>
+    <div class="sidebar" id="sidebar">
+        <button class="sidebar-toggle-btn" id="sidebarToggleBtn"><i class="fas fa-bars"></i></button>
+        <div class="logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i>
+                        <span>Gösterge Paneli</span></a></li>
+                <li><a href="#" data-page="products"><i class="fas fa-box"></i> <span>Ürünler</span></a></li>
+                <li><a href="#" data-page="orders"><i class="fas fa-shopping-bag"></i> <span>Siparişler</span></a></li>
+                <li><a href="#" data-page="customers"><i class="fas fa-users"></i> <span>Müşteriler</span></a></li>
+                <li><a href="#" data-page="brands"><i class="fas fa-tag"></i> <span>Markalar</span></a></li>
+                <li><a href="#" data-page="reports"><i class="fas fa-chart-line"></i> <span>Raporlar</span></a></li>
+                <li><a href="#" data-page="settings"><i class="fas fa-cog"></i> <span>Ayarlar</span></a></li>
+            </ul>
+        </nav>
+        <div class="logout-section">
+            <a href="index.html"><i class="fas fa-sign-out-alt"></i> <span>Çıkış Yap</span></a>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="topbar">
+            <h2></h2>
+            <div class="admin-info">
+                <div class="admin-avatar"></div>
+                <span></span>
+            </div>
+        </div>
+
+        <div id="dynamicContentArea">
+        </div>
+    </div>
+
+    <script src="../Script/admin.js">
+
+    </script>
+</body>
+
+</html>

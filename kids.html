@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çocuk Ürünleri - STİLİSTRE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="Style/kids.css">
+
+</head>
+
+<body>
+    <div class="auth-modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>STİLİSTRE</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-tabs">
+                <button class="tab-btn active" id="loginTab">Giriş Yap</button>
+                <button class="tab-btn" id="registerTab">Kayıt Ol</button>
+            </div>
+            <div class="modal-body">
+                <form class="auth-form active" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">E-posta</label>
+                        <input type="email" id="loginEmail" placeholder="E-posta adresinizi girin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Şifre</label>
+                        <input type="password" id="loginPassword" placeholder="Şifrenizi girin" required>
+                    </div>
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Beni Hatırla</label>
+                        </div>
+                        <a href="#" class="forgot-password">Şifremi Unuttum?</a>
+                    </div>
+                    <button type="submit" class="submit-btn">Giriş Yap</button>
+                    <div id="loginMessage" class="mt-3 text-center text-lg font-semibold"></div>
+
+                    <div class="signup-link">
+                        Hesabınız yok mu? <a href="#" id="goToRegister">Kayıt Ol</a>
+                    </div>
+                </form>
+
+                <form class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Ad Soyad</label>
+                        <input type="text" id="registerName" placeholder="Adınız ve soyadınız" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">E-posta</label>
+                        <input type="email" id="registerEmail" placeholder="E-posta adresiniz" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Şifre</label>
+                        <input type="password" id="registerPassword" placeholder="Şifreniz (min. 6 karakter)" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirm">Şifreyi Onayla</label>
+                        <input type="password" id="registerConfirm" placeholder="Şifrenizi tekrar girin" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Hesap Oluştur</button>
+                    <div id="registerMessage" class="mt-3 text-center"></div>
+                    <div class="signup-link">
+                        Zaten hesabınız var mı? <a href="#" id="goToLogin">Giriş Yap</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <h1>STİL<span>İSTRE</span></h1>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Aradığınız ürünü buraya yazın...">
+                    <button><i class="fas fa-search"></i> Ara</button>
+                </div>
+                <div class="header-icons">
+                    <button class="icon-btn" id="profileBtn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="icon-btn" onclick="window.location.href='favorites.html'">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="icon-btn" onclick="window.location.href='market.html'">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="icon-badge">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Anasayfa</a></li>
+                    <li><a href="women.html">Kadın</a></li>
+                    <li><a href="male.html">Erkek</a></li>
+                    <li><a href="kids.html" class="active">Çocuk</a></li>
+                    <li><a href="shoe.html">Ayakkabı</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="products-section">
+        <div class="container">
+            <div class="section-title">
+                <h1>Çocuk Ürünleri</h1>
+            </div>
+
+            <div class="products-grid">
+                <div class="product-card" data-id="kids-1" data-name="Eşofman Takımı" data-price="199.99" data-image="https://images.unsplash.com/photo-1541101767792-f9b2b1c4f127?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80">
+                    <div class="product-img">
+                        <img src="https://images.unsplash.com/photo-1541101767792-f9b2b1c4f127?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                            alt="Eşofman Takımı">
+                        <div class="favorite-icon"><i class="far fa-heart"></i></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Eşofman Takımı</h3>
+                        <div class="price">
+                            <div class="current">₺199.99</div>
+                            <div class="old">₺299.99</div>
+                        </div>
+                        <button class="add-to-cart">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="kids-2" data-name="Desenli Tişört" data-price="89.99" data-image="https://images.unsplash.com/photo-1575425186775-b8de9a427e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80">
+                    <div class="product-img">
+                        <img src="https://images.unsplash.com/photo-1575425186775-b8de9a427e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                            alt="Tişört">
+                        <div class="favorite-icon"><i class="far fa-heart"></i></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Desenli Tişört</h3>
+                        <div class="price">
+                            <div class="current">₺89.99</div>
+                            <div class="old">₺129.99</div>
+                        </div>
+                        <button class="add-to-cart">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="kids-3" data-name="Kız Çocuk Elbise" data-price="149.99" data-image="https://images.unsplash.com/photo-1604917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80">
+                    <div class="product-img">
+                        <img src="https://images.unsplash.com/photo-1604917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                            alt="Elbise">
+                        <div class="favorite-icon"><i class="far fa-heart"></i></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Kız Çocuk Elbise</h3>
+                        <div class="price">
+                            <div class="current">₺149.99</div>
+                            <div class="old">₺199.99</div>
+                        </div>
+                        <button class="add-to-cart">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="kids-4" data-name="Spor Ayakkabı" data-price="299.99" data-image="https://images.unsplash.com/photo-1582291027961-49f86beee645?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80">
+                    <div class="product-img">
+                        <img src="https://assets.goal.com/images/v3/bltcb97ace24899eff9/Icardi.jpg"
+                            alt="Spor Ayakkabı">
+                        <div class="favorite-icon"><i class="far fa-heart"></i></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Spor Ayakkabı</h3>
+                        <div class="price">
+                            <div class="current">₺299.99</div>
+                            <div class="old">₺399.99</div>
+                        </div>
+                        <button class="add-to-cart">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="kids-5" data-name="Yün Kazak" data-price="159.99" data-image="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80">
+                    <div class="product-img">
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                            alt="Kazak">
+                        <div class="favorite-icon"><i class="far fa-heart"></i></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Yün Kazak</h3>
+                        <div class="price">
+                            <div class="current">₺159.99</div>
+                            <div class="old">₺219.99</div>
+                        </div>
+                        <button class="add-to-cart">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="kids-6" data-name="Kot Pantolon" data-price="179.99" data-image="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80">
+                    <div class="product-img">
+                        <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=400&q=80"
+                            alt="Pantolon">
+                        <div class="favorite-icon"><i class="far fa-heart"></i></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Kot Pantolon</h3>
+                        <div class="price">
+                            <div class="current">₺179.99</div>
+                            <div class="old">₺239.99</div>
+                        </div>
+                        <button class="add-to-cart">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="kids-7" data-name="Kış Botu" data-price="349.99" data-image="https://images.unsplash.com/photo-1595341888016-a392ef81b7de?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80">
+                    <div class="product-img">
+                        <img src="https://images.unsplash.com/photo-1595341888016-a392ef81b7de?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                            alt="Bot">
+                        <div class="favorite-icon"><i class="far fa-heart"></i></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Kış Botu</h3>
+                        <div class="price">
+                            <div class="current">₺349.99</div>
+                            <div class="old">₺499.99</div>
+                        </div>
+                        <button class="add-to-cart">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="kids-8" data-name="Takım Eşofman" data-price="249.99" data-image="https://images.unsplash.com/photo-1582291027961-49f86beee645?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80">
+                    <div class="product-img">
+                        <img src="https://images.unsplash.com/photo-1582291027961-49f86beee645?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                            alt="Takım">
+                        <div class="favorite-icon"><i class="far fa-heart"></i></div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Takım Eşofman</h3>
+                        <div class="price">
+                            <div class="current">₺249.99</div>
+                            <div class="old">₺349.99</div>
+                        </div>
+                        <button class="add-to-cart">Sepete Ekle</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>STİLİSTRE</h3>
+                    <p>Türkiye'nin en trend giyim ürünleri tek platformda. Kalite ve uygun fiyat garantisi!</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Kategoriler</h3>
+                    <ul>
+                        <li><a href="women.html">Kadın Giyim</a></li>
+                        <li><a href="male.html">Erkek Giyim</a></li>
+                        <li><a href="kids.html">Çocuk Giyim</a></li>
+                        <li><a href="shoe.html">Ayakkabı</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Müşteri Hizmetleri</h3>
+                    <ul>
+                        <li><a href="#">Sipariş Takibi</a></li>
+                        <li><a href="#">İade ve Değişim</a></li>
+                        <li><a href="#">Teslimat Bilgileri</a></li>
+                        <li><a href="#">Sıkça Sorulan Sorular</a></li>
+                        <li><a href="#">Gizlilik Politikası</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>İletişim</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> İstanbul, Türkiye</li>
+                        <li><i class="fas fa-phone"></i> +90 212 123 4567</li>
+                        <li><i class="fas fa-envelope"></i> info@stilistre.com</li>
+                        <li><i class="fas fa-clock"></i> 09:00 - 18:00</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2025 STİLİSTRE. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="Script/kids.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</body>
+
+</html>

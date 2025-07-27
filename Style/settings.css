@@ -1,0 +1,396 @@
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+
+        /* Header Stilleri (Genel header.css'ten alınabilir) */
+        header {
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2em;
+            color: #333;
+            margin: 0;
+        }
+
+        .logo span {
+            color: #a0522d;
+            /* Sienna rengi */
+        }
+
+        .search-bar {
+            display: flex;
+            flex-grow: 1;
+            margin: 0 20px;
+            max-width: 500px;
+        }
+
+        .search-bar input[type="text"] {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            font-size: 1em;
+        }
+
+        .search-bar button {
+            background-color: #a0522d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #8b4513;
+            /* SaddleBrown */
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            margin-left: 15px;
+            cursor: pointer;
+            color: #555;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            color: #a0522d;
+        }
+
+        .icon-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #a0522d;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            line-height: 1;
+        }
+
+        /* Profil Dropdown Stilleri */
+        .profile-dropdown-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        #profileDropdown {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 170px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            right: 0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        #profileDropdown a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        #profileDropdown a:hover {
+            background-color: #ddd;
+        }
+
+        /* Navigasyon Stilleri */
+        nav {
+            background: #333;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1em;
+            padding: 5px 0;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: #a0522d;
+        }
+
+        /* Settings Section Stilleri */
+        .settings-section {
+            padding: 40px 0;
+            background: #fff;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-section h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .settings-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .setting-block {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .setting-block h2 {
+            font-size: 1.8em;
+            color: #a0522d;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #a0522d;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .setting-block p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .setting-block p strong {
+            color: #555;
+        }
+
+
+        .setting-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .setting-form input[type="text"],
+        .setting-form input[type="email"],
+        .setting-form input[type="password"] {
+            width: calc(100% - 22px);
+            /* Padding'i hesaba kat */
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+            /* Padding'in genişliği etkilememesi için */
+        }
+
+        .setting-form button {
+            background-color: #a0522d;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            display: block;
+        }
+
+        .setting-form button:hover {
+            background-color: #8b4513;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+
+        /* Footer Stilleri (Genel footer.css'ten alınabilir) */
+        footer {
+            background: #333;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+            margin: 20px;
+        }
+
+        .footer-col h3 {
+            color: #a0522d;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+        }
+
+        .footer-col p {
+            font-size: 0.95em;
+            line-height: 1.8;
+            color: #ccc;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #a0522d;
+        }
+
+        .footer-col ul li i {
+            margin-right: 10px;
+            color: #a0522d;
+        }
+
+        .social-links a {
+            color: white;
+            margin-right: 15px;
+            font-size: 1.5em;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #a0522d;
+        }
+
+        .copyright {
+            text-align: center;
+            border-top: 1px solid #555;
+            padding-top: 20px;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .search-bar {
+                margin: 15px 0;
+                width: 100%;
+                max-width: unset;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+            }
+
+            nav ul li {
+                margin: 10px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-col {
+                margin: 15px 0;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+                display: flex;
+            }
+        }
