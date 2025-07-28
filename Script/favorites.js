@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Header ve Sepet İkonu Elementleri ---
+    // Sepet ikonu üzerindeki sayı için kullanılan element
+    const cartItemCount = document.querySelector('.header-icons .icon-badge'); 
+
     // --- Auth Modal Yönetimi ---
     const authModal = document.getElementById('authModal');
     const closeModalBtn = document.getElementById('closeModal');
@@ -12,6 +16,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginMessageDiv = document.getElementById('loginMessage');
     const registerMessageDiv = document.getElementById('registerMessage');
 
+    // --- Favoriler Sayfasına Özel İçerik Yönetimi İçin Elementler ---
+    const favoritesEmptyMessage = document.querySelector('.favorites-empty-message');
+    const favoritesProductsContainer = document.querySelector('.favorites-products');
+    const loginRegisterBtnFavorites = document.getElementById('loginRegisterBtn');
+
+    // --- Sepet Fonksiyonları (Session Storage ile etkileşim) ---
+    function getCartItems() {
+        const cart = sessionStorage.getItem('cartItems');
+        if (!cart) return [];
+        try {
+            return JSON.parse(cart).map(item => ({
+                ...item,
+                id: typeof item.id === 'string' && !isNaN(Number(item.id)) ? Number(item.id) : item.id,
+                price: parseFloat(item.price),
+                quantity: Number(item.quantity)
+            }));
+        } catch (e) {
+            console.error("Sepet verileri parse edilirken hata oluştu:", e);
+            return [];
+        }
+    }
+
+    function saveCartItems(cartItems) {
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        updateCartBadge(); // Sepet değiştiğinde rozeti güncelle
+    }
+
+    // Market ikonu üzerindeki sepet sayısını güncelle
+    function updateCartBadge() {
+        const cartItems = getCartItems();
+        const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        if (cartItemCount) { // cartItemCount elementinin varlığını kontrol et
+            cartItemCount.textContent = totalQuantity;
+        }
+    }
+
+    // --- Auth Modal Genel Fonksiyonları ---
     function openAuthModal() {
         if (authModal) {
             authModal.style.display = 'flex';
@@ -22,36 +63,71 @@ document.addEventListener('DOMContentLoaded', () => {
         if (authModal) {
             authModal.style.display = 'none';
             // Mesajları kapatırken sıfırlama
-            if (loginMessageDiv) loginMessageDiv.innerHTML = '';
-            if (registerMessageDiv) registerMessageDiv.innerHTML = '';
+            if (loginMessageDiv) {
+                loginMessageDiv.innerHTML = '';
+                loginMessageDiv.classList.remove('text-red-500', 'text-green-500', 'text-yellow-500', 'mt-3', 'text-center', 'text-lg', 'font-semibold');
+            }
+            if (registerMessageDiv) {
+                registerMessageDiv.innerHTML = '';
+                registerMessageDiv.classList.remove('text-red-500', 'text-green-500', 'text-yellow-500', 'mt-3', 'text-center', 'text-lg', 'font-semibold');
+            }
         }
     }
 
-    // Profil butonu tıklandığında modali aç
-    if (profileBtn) {
-        profileBtn.addEventListener('click', openAuthModal);
+    // --- Yardımcı Fonksiyon: Mesajları Göster ve Biçimlendir ---
+    function showMessage(element, message, type) {
+        if (!element) return; // Element yoksa hata vermeden çık
+
+        element.textContent = message;
+        // Mevcut renk ve stil sınıflarını kaldır, yeni sınıfları ekle
+        element.classList.remove('text-red-500', 'text-green-500', 'text-yellow-500', 'hidden');
+        element.classList.add('mt-3', 'text-center', 'text-lg', 'font-semibold'); // Genel stiller
+
+        if (type === 'success') {
+            element.classList.add('text-green-500');
+        } else if (type === 'error') {
+            element.classList.add('text-red-500');
+        } else if (type === 'info') {
+            element.classList.add('text-yellow-500');
+        }
+
+        // Başarılı mesajı dışında kalanları 4 saniye sonra temizle
+        if (type !== 'success') {
+            setTimeout(() => {
+                element.textContent = '';
+                element.classList.remove('text-red-500', 'text-green-500', 'text-yellow-500', 'mt-3', 'text-center', 'text-lg', 'font-semibold');
+            }, 4000);
+        }
     }
 
-    // Modal kapatma butonu tıklandığında modali kapat
+    // --- Event Listeners ---
+    if (profileBtn) {
+        profileBtn.addEventListener('click', () => {
+            openAuthModal();
+            loginTabBtn.click(); // Profil butonuna tıklayınca varsayılan olarak giriş sekmesini aç
+        });
+    }
+
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', closeAuthModal);
     }
 
-    // Modal dışına tıklandığında modali kapat
     window.addEventListener('click', (event) => {
         if (event.target === authModal) {
             closeAuthModal();
         }
     });
 
-    // Tab Geçişleri (Giriş / Kayıt Ol)
     if (loginTabBtn && registerTabBtn && loginForm && registerForm) {
         loginTabBtn.addEventListener('click', () => {
             loginTabBtn.classList.add('active');
             registerTabBtn.classList.remove('active');
             loginForm.classList.add('active');
             registerForm.classList.remove('active');
-            // Tab değiştiğinde mesajları temizle
+            closeAuthModal(); // Her tab geçişinde mesajları temizle
+            openAuthModal(); // Sonra tekrar aç (gerekiyorsa)
+            // Bu kısım modal kapanıp açıldığı için temizleniyor, ekstra bir clear'a gerek kalmaz
+            // Ancak yine de manuel temizleme eklenebilir:
             if (loginMessageDiv) loginMessageDiv.innerHTML = '';
             if (registerMessageDiv) registerMessageDiv.innerHTML = '';
         });
@@ -61,97 +137,76 @@ document.addEventListener('DOMContentLoaded', () => {
             loginTabBtn.classList.remove('active');
             registerForm.classList.add('active');
             loginForm.classList.remove('active');
-            // Tab değiştiğinde mesajları temizle
+            closeAuthModal(); // Her tab geçişinde mesajları temizle
+            openAuthModal(); // Sonra tekrar aç (gerekiyorsa)
+            // Bu kısım modal kapanıp açıldığı için temizleniyor, ekstra bir clear'a gerek kalmaz
+            // Ancak yine de manuel temizleme eklenebilir:
             if (loginMessageDiv) loginMessageDiv.innerHTML = '';
             if (registerMessageDiv) registerMessageDiv.innerHTML = '';
         });
 
-        // Giriş formundan Kayıt Ol'a git linki
         if (goToRegisterLink) {
             goToRegisterLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                registerTabBtn.click(); // Kayıt Ol sekmesini tetikle
+                registerTabBtn.click();
             });
         }
 
-        // Kayıt formundan Giriş Yap'a git linki
         if (goToLoginLink) {
             goToLoginLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                loginTabBtn.click(); // Giriş Yap sekmesini tetikle
+                loginTabBtn.click();
             });
         }
     }
 
-    // --- Favoriler Sayfasına Özel İçerik Yönetimi ---
-    const favoritesEmptyMessage = document.querySelector('.favorites-empty-message');
-    const favoritesProductsContainer = document.querySelector('.favorites-products');
-    const loginRegisterBtnFavorites = document.getElementById('loginRegisterBtn');
-
+    // --- Favoriler Sayfasına Özel İçerik Yönetimi Fonksiyonları ---
     function checkLoginStatus() {
-        // Bu sadece bir placeholder. Gerçek bir uygulamada sunucu taraflı oturum kontrolü yapılmalıdır.
         const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
         return loggedIn;
     }
 
     function updateFavoritesDisplay() {
         const loggedIn = checkLoginStatus();
-        // hasFavoriteProducts, gerçek veritabanınızdan veya API'den gelmelidir.
-        // Şimdilik, sadece test amaçlı olarak varsayılan bir değer verelim.
-        // Örneğin, giriş yapılmamışsa veya giriş yapılmış ama favori yoksa false.
-        const hasFavoriteProducts = false; // <<< Bu değeri PHP ile dinamik hale getirmelisiniz
+        const hasFavoriteProducts = false; // Bu değeri PHP ile dinamik hale getirmelisiniz
 
         if (loggedIn) {
-            // Kullanıcı giriş yapmış
             if (hasFavoriteProducts) {
-                // Kullanıcının favori ürünleri varsa
                 favoritesEmptyMessage.style.display = 'none';
                 favoritesProductsContainer.style.display = 'grid';
                 if (loginRegisterBtnFavorites) {
-                    loginRegisterBtnFavorites.style.display = 'none'; // Butonu gizle
+                    loginRegisterBtnFavorites.style.display = 'none';
                 }
-                console.log("Kullanıcı giriş yaptı ve favori ürünleri var, favoriler gösteriliyor.");
-                // TODO: Burada favori ürünleri bir API çağrısı ile getirip favoritesProductsContainer içine ekleyin
-                // Örneğin: fetchFavoriteProducts();
             } else {
-                // Kullanıcı giriş yaptı ama favori ürünü yok
                 favoritesEmptyMessage.style.display = 'block';
                 favoritesProductsContainer.style.display = 'none';
                 favoritesEmptyMessage.querySelector('p:nth-of-type(2)').innerHTML = 'Favorilerinizde henüz ürün bulunmamaktadır. Yeni ürünler keşfetmek için <a href="index.html" style="color:#007bff; text-decoration:underline;">Anasayfa</a>\'ya göz atın.';
-                favoritesEmptyMessage.querySelector('p:first-of-type').style.display = 'block'; // İlk mesajı da göster
+                favoritesEmptyMessage.querySelector('p:first-of-type').style.display = 'block';
                 if (loginRegisterBtnFavorites) {
-                    loginRegisterBtnFavorites.style.display = 'none'; // Giriş yapmışsa butonu gizle
+                    loginRegisterBtnFavorites.style.display = 'none';
                 }
-                console.log("Kullanıcı giriş yaptı ama favori ürünleri yok, boş mesaj gösteriliyor.");
             }
         } else {
-            // Kullanıcı giriş yapmadı - Tam olarak istediğiniz senaryo
             favoritesEmptyMessage.style.display = 'block';
             favoritesProductsContainer.style.display = 'none';
-            // İlk mesajı göster: "Favorilerinizde henüz ürün bulunmamaktadır."
             favoritesEmptyMessage.querySelector('p:first-of-type').style.display = 'block';
-            // İkinci mesajı güncelleyin: "Favori Ürünlerinizi Görmek Veya Yeni Ürünler Eklemek İçin Lütfen Kayıt Olun Veya Giriş Yapın"
             favoritesEmptyMessage.querySelector('p:nth-of-type(2)').innerHTML = 'Favori Ürünlerinizi Görmek Veya Yeni Ürünler Eklemek İçin Lütfen Kayıt Olun Veya Giriş Yapın';
             if (loginRegisterBtnFavorites) {
-                loginRegisterBtnFavorites.style.display = 'inline-block'; // Butonu göster
+                loginRegisterBtnFavorites.style.display = 'inline-block';
             }
-            console.log("Kullanıcı giriş yapmadı, giriş uyarısı gösteriliyor.");
         }
     }
 
-    // Sayfa yüklendiğinde favori ekranını güncelle
-    updateFavoritesDisplay();
-
-    // Favoriler sayfasındaki "Giriş Yap / Kayıt Ol" butonuna tıklama olayı
+    // --- Favoriler Butonu Event Listener ---
     if (loginRegisterBtnFavorites) {
         loginRegisterBtnFavorites.addEventListener('click', () => {
-            openAuthModal(); // Modalı aç
+            openAuthModal();
             if (loginTabBtn) {
-                loginTabBtn.click(); // Giriş sekmesini aktif yap
+                loginTabBtn.click();
             }
-            // Giriş formunda kullanıcıya özel bir uyarı mesajı göster (sadece bu butondan gelirse)
-            if (!checkLoginStatus() && loginMessageDiv) {
-                loginMessageDiv.innerHTML = '<span style="color: red; font-weight: bold;">Favorilerinizi görmek için giriş yapmanız gerekiyor!</span>';
+            // Favoriler sayfasından geliyorsa özel uyarı mesajı
+            if (!checkLoginStatus()) {
+                showMessage(loginMessageDiv, 'Favorilerinizi görmek için giriş yapmanız gerekiyor!', 'error');
             }
         });
     }
@@ -164,9 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('loginPassword').value;
 
             if (!email || !password) {
-                loginMessageDiv.innerHTML = '<span style="color: red;">E-posta ve şifre zorunludur.</span>';
+                showMessage(loginMessageDiv, 'E-posta ve şifre zorunludur.', 'error');
                 return;
             }
+
+            showMessage(loginMessageDiv, 'Giriş yapılıyor...', 'info');
 
             const formData = new URLSearchParams();
             formData.append('email', email);
@@ -185,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (data.status === 'success') {
                     localStorage.setItem('isLoggedIn', 'true');
-                    loginMessageDiv.innerHTML = '<span style="color: green;">Giriş başarılı! Yönlendiriliyorsunuz...</span>';
+                    showMessage(loginMessageDiv, 'Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
                     setTimeout(() => {
                         closeAuthModal(); // Modalı kapat
                         updateFavoritesDisplay(); // Favori ekranını yeniden güncelle
@@ -193,11 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 1000); // 1 saniye sonra yönlendir
                 } else {
                     localStorage.setItem('isLoggedIn', 'false');
-                    loginMessageDiv.innerHTML = `<span style="color: red;">${data.message || 'E-posta veya şifre yanlış.'}</span>`;
+                    showMessage(loginMessageDiv, data.message || 'E-posta veya şifre yanlış.', 'error');
                 }
             } catch (error) {
                 console.error('Giriş isteği sırasında hata oluştu:', error);
-                loginMessageDiv.innerHTML = '<span style="color: red;">Bir hata oluştu. Lütfen daha sonra tekrar deneyin.</span>';
+                showMessage(loginMessageDiv, 'Bir hata oluştu. Lütfen daha sonra tekrar deneyin.', 'error');
             }
         });
     }
@@ -211,20 +268,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('registerPassword').value;
             const confirmPassword = document.getElementById('registerConfirm').value;
 
-            if (!name || !email || !password || !confirmPassword) {
-                registerMessageDiv.innerHTML = '<span style="color: red;">Tüm alanlar zorunludur.</span>';
+            if (!name || !email || !password || !confirmPassword) { // !password düzeltildi
+                showMessage(registerMessageDiv, 'Tüm alanlar zorunludur.', 'error');
                 return;
             }
 
             if (password !== confirmPassword) {
-                registerMessageDiv.innerHTML = '<span style="color: red;">Şifreler eşleşmiyor.</span>';
+                showMessage(registerMessageDiv, 'Şifreler eşleşmiyor.', 'error');
                 return;
             }
 
             if (password.length < 6) {
-                registerMessageDiv.innerHTML = '<span style="color: red;">Şifre en az 6 karakter olmalı.</span>';
+                showMessage(registerMessageDiv, 'Şifre en az 6 karakter olmalı.', 'error');
                 return;
             }
+
+            showMessage(registerMessageDiv, 'Hesap oluşturuluyor...', 'info');
 
             const formData = new URLSearchParams();
             formData.append('name', name);
@@ -244,23 +303,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    registerMessageDiv.innerHTML = '<span style="color: green;">Kayıt başarılı! Şimdi giriş yapabilirsiniz.</span>';
-                    // Kayıt başarılı olduktan 1 saniye sonra otomatik olarak giriş sekmesine yönlendir
+                    showMessage(registerMessageDiv, 'Kayıt başarılı! Şimdi giriş yapabilirsiniz.', 'success');
                     setTimeout(() => {
                         if (loginTabBtn) {
                             loginTabBtn.click(); // Giriş sekmesini aktif et
-                            // Giriş formuna kayıt başarılı mesajı veya direkt favoriler uyarısı ekle
-                            loginMessageDiv.innerHTML = '<span style="color: green;">Kaydınız başarıyla oluşturuldu. Lütfen giriş yapın.</span>';
+                            showMessage(loginMessageDiv, 'Kaydınız başarıyla oluşturuldu. Lütfen giriş yapın.', 'success'); // Giriş formuna başarılı mesajı
                         }
                         registerForm.reset(); // Kayıt formunu sıfırla
                     }, 1000); // 1 saniye sonra yönlendir
                 } else {
-                    registerMessageDiv.innerHTML = `<span style="color: red;">${data.message || 'Kayıt sırasında bir hata oluştu.'}</span>`;
+                    showMessage(registerMessageDiv, data.message || 'Kayıt sırasında bir hata oluştu.', 'error');
                 }
             } catch (error) {
                 console.error('Kayıt isteği sırasında hata oluştu:', error);
-                registerMessageDiv.innerHTML = '<span style="color: red;">Bir hata oluştu. Lütfen daha sonra tekrar deneyin.</span>';
+                showMessage(registerMessageDiv, 'Bir hata oluştu. Lütfen daha sonra tekrar deneyin.', 'error');
             }
         });
     }
+
+    // Sayfa yüklendiğinde ve sepetle ilgili bir işlem olduğunda sayıyı güncelle
+    updateCartBadge();
+    updateFavoritesDisplay(); // Sayfa yüklendiğinde favori ekranını güncelle
 });

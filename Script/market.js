@@ -304,6 +304,7 @@ function showMessage(element, message, type) {
     if (!element) return; // Element yoksa hata vermeden çık
 
     element.textContent = message;
+    // Mevcut renk sınıflarını kaldır, yeni sınıfları ekle
     element.classList.remove('text-red-500', 'text-green-500', 'text-yellow-500', 'hidden');
     element.classList.add('mt-3', 'text-center', 'text-lg', 'font-semibold');
 
@@ -315,10 +316,14 @@ function showMessage(element, message, type) {
         element.classList.add('text-yellow-500');
     }
 
-    setTimeout(() => {
-        element.textContent = '';
-        element.classList.remove('text-red-500', 'text-green-500', 'text-yellow-500');
-    }, 4000);
+    // Mesajı 4 saniye sonra temizle (sadece hata ve bilgi mesajları için)
+    // Başarılı giriş mesajını yönlendirme öncesi temizlememek için ayırma yapıldı.
+    if (type !== 'success') {
+        setTimeout(() => {
+            element.textContent = '';
+            element.classList.remove('text-red-500', 'text-green-500', 'text-yellow-500', 'mt-3', 'text-center', 'text-lg', 'font-semibold');
+        }, 4000);
+    }
 }
 
 
@@ -327,8 +332,8 @@ if (loginForm) { // loginForm var mı kontrol et
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (loginMessage) {
-            loginMessage.textContent = '';
-            loginMessage.style.color = 'red';
+            loginMessage.textContent = ''; // Her submit'te önceki mesajı temizle
+            // loginMessage.style.color = 'red'; // Bu satıra gerek kalmadı, showMessage fonksiyonu hallediyor
         }
 
         const emailInput = document.getElementById('loginEmail');
@@ -353,10 +358,12 @@ if (loginForm) { // loginForm var mı kontrol et
             const result = await res.json();
 
             if (result.status === 'success') {
-                showMessage(loginMessage, result.message || 'Giriş başarılı!', 'success');
+                // Başarılı giriş mesajı ve renk ayarı
+                showMessage(loginMessage, 'Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
                 if (loginForm) loginForm.reset();
                 setTimeout(() => window.location.href = 'index.php', 2000);
             } else {
+                // Hata mesajı ve renk ayarı
                 showMessage(loginMessage, result.message || 'Giriş başarısız.', 'error');
             }
         } catch (err) {
@@ -372,8 +379,8 @@ if (registerForm) { // registerForm var mı kontrol et
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (registerMessage) {
-            registerMessage.textContent = '';
-            registerMessage.style.color = 'red';
+            registerMessage.textContent = ''; // Her submit'te önceki mesajı temizle
+            // registerMessage.style.color = 'red'; // Bu satıra gerek kalmadı, showMessage fonksiyonu hallediyor
         }
 
         const nameInput = document.getElementById('registerName');
