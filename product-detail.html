@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ürün Detayı - Stilistre</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="Style/index.css"> <link rel="stylesheet" href="Style/product-detail.css"> <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div class="auth-modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>STİL<span>İSTRE</span></h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-tabs">
+                <button class="tab-btn active" id="loginTab">Giriş Yap</button>
+                <button class="tab-btn" id="registerTab">Kayıt Ol</button>
+            </div>
+            <div class="modal-body">
+                <form class="auth-form active" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">E-posta</label>
+                        <input type="email" id="loginEmail" placeholder="E-posta adresinizi girin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Şifre</label>
+                        <input type="password" id="loginPassword" placeholder="Şifrenizi girin" required>
+                    </div>
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Beni Hatırla</label>
+                        </div>
+                        <a href="#" class="forgot-password">Şifremi Unuttum?</a>
+                    </div>
+                    <button type="submit" class="submit-btn">Giriş Yap</button>
+                    <div id="loginMessage" style="margin-top:10px; font-weight:600; text-align:center;"></div>
+
+                    <div class="signup-link">
+                        Hesabınız yok mu? <a href="#" id="goToRegister">Kayıt Ol</a>
+                    </div>
+                </form>
+
+                <form class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Ad Soyad</label>
+                        <input type="text" id="registerName" placeholder="Adınız ve soyadınız" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">E-posta</label>
+                        <input type="email" id="registerEmail" placeholder="E-posta adresiniz" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Şifre</label>
+                        <input type="password" id="registerPassword" placeholder="Şifreniz (min. 6 karakter)" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirm">Şifreyi Onayla</label>
+                        <input type="password" id="registerConfirm" placeholder="Şifrenizi tekrar girin" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Hesap Oluştur</button>
+                    <div id="registerMessage" style="margin-top:10px; font-weight:600; text-align: center; "></div>
+
+                    <div class="signup-link">
+                        Zaten hesabınız var mı? <a href="#" id="goToLogin">Giriş Yap</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="favoriteLoginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Favorilere Ekle</h2>
+                <button class="close-modal" id="closeFavoriteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center; margin-bottom: 20px;">Favorilere ürün eklemek için lütfen giriş yapın
+                    veya kayıt olun.</p>
+                <div style="display: flex; justify-content: space-around;">
+                    <button class="submit-btn" id="favoriteGoToLogin" style="width: 45%;">Giriş Yap</button>
+                    <button class="submit-btn" id="favoriteGoToRegister" style="width: 45%;">Kayıt Ol</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <h1>STİL<span>İSTRE</span></h1>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Aradığınız ürünü buraya yazın...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="header-icons">
+                    <button class="icon-btn" id="profileBtn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="icon-btn" onclick="window.location.href='favorites.html'">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="icon-btn" onclick="window.location.href='market.html'">
+                        <i class=" fas fa-shopping-cart" href="market.html"></i>
+                        <span class="icon-badge" id="cartItemCount">0</span> </button>
+                </div>
+            </div>
+        </div>
+
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Anasayfa</a></li>
+                    <li><a href="women.html">Kadın</a></li>
+                    <li><a href="male.html">Erkek</a></li>
+                    <li><a href="kids.html">Çocuk</a></li>
+                    <li><a href="shoe.html">Ayakkabı</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container product-detail-main">
+        <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Geri Dön</button>
+
+        <div id="productDetailContent" class="product-detail-card">
+            <div class="product-detail-image">
+                <img src="https://via.placeholder.com/600x600?text=Ürün+Görseli" alt="Ürün Adı" id="detailProductImage">
+            </div>
+            <div class="product-detail-info">
+                <h1 id="detailProductName">Ürün Yükleniyor...</h1>
+                <p class="product-detail-category" id="detailProductCategory"></p>
+                <div class="product-detail-price">
+                    <span class="current-price" id="detailCurrentPrice">₺0.00</span>
+                    <span class="old-price" id="detailOldPrice"></span>
+                </div>
+                <p class="product-detail-description" id="detailProductDescription">Ürün açıklaması burada yer alacaktır. Ürün hakkında detaylı bilgiler, malzeme, yıkama talimatları vb. eklenebilir.
+                </p>
+
+                <div class="product-options">
+                    <div class="size-selection">
+                        <label for="productSize">Beden Seçin:</label>
+                        <select id="productSize">
+                            <option value="">Seçiniz</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                        </select>
+                        <p class="size-warning" id="sizeWarning" style="color: red; margin-top: 5px; display: none;">Lütfen bir beden seçiniz.</p>
+                    </div>
+
+                    <div class="quantity-control">
+                        <label for="productQuantity">Adet:</label>
+                        <div class="quantity-buttons">
+                            <button id="decreaseQuantity">-</button>
+                            <input type="number" id="productQuantity" value="1" min="1" readonly>
+                            <button id="increaseQuantity">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn add-to-cart-detail" id="addToCartDetail"><i class="fas fa-shopping-cart"></i> Sepete Ekle</button>
+                    <button class="btn add-to-favorites-detail" id="addToFavoritesDetail"><i class="far fa-heart"></i> Favorilere Ekle</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>STİL<span>İSTRE</span></h3>
+                    <p>Türkiye'nin en trend giyim ve moda ürünleri tek platformda. Kalite ve uygun fiyat garantisi!</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Kategoriler</h3>
+                    <ul>
+                        <li><a href="women.html">Kadın Giyim</a></li>
+                        <li><a href="male.html">Erkek Giyim</a></li>
+                        <li><a href="kids.html">Çocuk Giyim</a></li>
+                        <li><a href="shoe.html">Ayakkabı</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Müşteri Hizmetleri</h3>
+                    <ul>
+                        <li><a href="#">Sipariş Takibi</a></li>
+                        <li><a href="#">İade ve Değişim</a></li>
+                        <li><a href="#">Teslimat Bilgileri</a></li>
+                        <li><a href="#">Sıkça Sorulan Sorular</a></li>
+                        <li><a href="#">Gizlilik Politikası</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>İletişim</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> İstanbul, Türkiye</li>
+                        <li><i class="fas fa-phone"></i> +90 212 123 4567</li>
+                        <li><i class="fas fa-envelope"></i> info@stilistre.com</li>
+                        <li><i class="fas fa-clock"></i> 09:00 - 18:00</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2025 Stilistre. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="Script/index.js"></script> <script src="Script/product-detail.js"></script> </body>
+
+</html>

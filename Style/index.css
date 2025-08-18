@@ -308,6 +308,7 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         transition: all 0.3s;
         position: relative;
+        cursor: pointer;
     }
 
     .product-card:hover {
@@ -874,36 +875,33 @@
     }
 
     /* Favori ikonu stilini ayarla */
-    .product-card .favorite-icon {
-        position: absolute;
-        /* Mutlak konumlandırma */
-        top: 10px;
-        /* Üstten 10 piksel boşluk */
-        right: 10px;
-        /* Sağdan 10 piksel boşluk */
-        font-size: 24px;
-        /* İkon boyutu */
-        color: #ccc;
-        /* Gri renk (varsayılan) */
-        cursor: pointer;
-        /* Fare üzerine gelince işaretçi değişimi */
-        z-index: 10;
-        /* Diğer elementlerin üzerinde görünmesini sağlar */
-        transition: color 0.3s ease;
-        /* Renk değişimine yumuşak geçiş */
-    }
+.favorite-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 26px;
+    color: var(--fav-icon-gray);
+    cursor: pointer;
+    z-index: 10;
+    transition: color 0.2s ease-in-out;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
 
-    /* Favori ikonu hover ve aktif durumu */
-    .product-card .favorite-icon:hover {
-        color: #ff6b6b;
-        /* Fare üzerine gelince kırmızı */
-    }
+.favorite-icon:hover {
+    color: var(--card-pink); /* Hover'da pembe/kırmızı tonu */
+}
 
-    /* Favori olarak işaretlenmiş ikon rengi */
-    .product-card .favorite-icon.active {
-        color: #ff0000;
-        /* Favoriye eklenince tam kırmızı */
-    }
+/* style.css veya doğrudan HTML içinde <style> etiketleri arasına */
+.favorite-icon {
+    /* Mevcut ikon stiliniz */
+    color: #333;              /* Varsayılan ikon rengi */
+    cursor: pointer;          /* İşaretçiyi el ikonuna dönüştürür */
+    transition: color 0.3s ease; /* Renk değişimine yumuşak bir geçiş ekler */
+}
+
+.favorite-icon:hover {
+    color: #ff0000;           /* Fare üzerine gelince kırmızı renk */
+}
 
     /* Giriş yap uyarısı için basit bir modal stili */
     .login-alert-modal {

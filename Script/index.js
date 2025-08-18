@@ -498,3 +498,6 @@ function updateCartDisplay() {
 if (window.location.pathname.includes('market.html')) {
     document.addEventListener('DOMContentLoaded', updateCartDisplay);
 }
+
+
+

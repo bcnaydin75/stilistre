@@ -274,32 +274,29 @@ nav ul li a.active {
 .favorite-icon {
     position: absolute;
     top: 15px;
-    /* Görseldeki gibi üstten boşluk */
     right: 15px;
-    /* Görseldeki gibi sağdan boşluk */
     font-size: 26px;
-    /* Görseldeki ikon boyutuna yakın */
     color: var(--fav-icon-gray);
-    /* Görseldeki gri tonu */
     cursor: pointer;
     z-index: 10;
-    /* Diğer elementlerin üzerinde */
     transition: color 0.2s ease-in-out;
-    /* Yumuşak renk değişimi */
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    /* Hafif gölge efekti */
 }
 
 .favorite-icon:hover {
-    color: var(--card-pink);
-    /* Hover'da pembe/kırmızı tonu */
+    color: var(--card-pink); /* Hover'da pembe/kırmızı tonu */
 }
 
-.favorite-icon.active .fa-heart {
-    color: var(--card-pink);
-    /* Aktif/dolu kalp rengi */
-    font-weight: 900;
-    /* Font Awesome'ın solid (dolu) kalp ikonu için */
+/* style.css veya doğrudan HTML içinde <style> etiketleri arasına */
+.favorite-icon {
+    /* Mevcut ikon stiliniz */
+    color: #333;              /* Varsayılan ikon rengi */
+    cursor: pointer;          /* İşaretçiyi el ikonuna dönüştürür */
+    transition: color 0.3s ease; /* Renk değişimine yumuşak bir geçiş ekler */
+}
+
+.favorite-icon:hover {
+    color: #ff0000;           /* Fare üzerine gelince kırmızı renk */
 }
 
 .quick-view {
@@ -808,7 +805,3 @@ footer {
     background-color: #ddd;
 }
 /* Giriş/Kayıt modallarındaki uyarı mesajlarının rengini kırmızı yapar */
-#loginMessage,
-#favoriteLoginModal .modal-body p {
-    color: var(--accent) !important; /* Tanımlı kırmızı renginiz */
-}

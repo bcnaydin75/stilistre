@@ -97,7 +97,7 @@ header {
 }
 
 .search-bar button:hover {
-    background: var(--secondary);
+    background: var(--primary);
 }
 
 .header-icons {
@@ -725,7 +725,6 @@ footer {
 }
 
 /* Favorite icon styles */
-
 .favorite-icon {
     position: absolute;
     top: 15px;
@@ -739,18 +738,18 @@ footer {
 }
 
 .favorite-icon:hover {
-    color: var(--card-pink);
-    /* Hover'da pembe/kırmızı tonu */
+    color: var(--card-pink); /* Hover'da pembe/kırmızı tonu */
 }
 
-.favorite-icon.active .fa-heart {
-    color: var(--card-pink);
-    /* Aktif/dolu kalp rengi */
-    font-weight: 900;
-    /* Font Awesome'ın solid (dolu) kalp ikonu için */
+/* style.css veya doğrudan HTML içinde <style> etiketleri arasına */
+.favorite-icon {
+    /* Mevcut ikon stiliniz */
+    color: #333;              /* Varsayılan ikon rengi */
+    cursor: pointer;          /* İşaretçiyi el ikonuna dönüştürür */
+    transition: color 0.3s ease; /* Renk değişimine yumuşak bir geçiş ekler */
 }
 
-#loginMessage,
-#favoriteLoginModal .modal-body p {
-    color: var(--accent) !important; /* Tanımlı kırmızı renginiz */
+.favorite-icon:hover {
+    color: #ff0000;           /* Fare üzerine gelince kırmızı renk */
 }
+

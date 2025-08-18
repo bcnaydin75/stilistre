@@ -717,12 +717,6 @@
        /* Hover'da pembe/kırmızı tonu */
    }
 
-   #loginMessage,
-   #favoriteLoginModal .modal-body p {
-       color: var(--accent) !important;
-       /* Tanımlı kırmızı renginiz */
-   }
-
    /* style.css veya doğrudan HTML içinde <style> etiketleri arasına */
 
    .favorite-icon {
