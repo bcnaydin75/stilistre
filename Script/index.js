@@ -348,8 +348,7 @@ favoriteIcons.forEach(icon => {
             if (authModal) authModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             if (loginTab) loginTab.click();
-            showMessage(loginMessage, 'Favorilere ürün eklemek için giriş yapmalısınız.', 'error');
-            console.log("Kullanıcı giriş yapmadığı için login modalı açıldı ve mesaj gösterildi.");
+            showMessage(loginMessage, 'Favorilere ürün eklemek için lütfen giriş yapın veya kayıt olun.', 'error');
         } else {
             const productId = this.dataset.productId;
             console.log(`Ürün ID ${productId} favorilere eklendi/kaldırıldı (Kullanıcı giriş yapmış).`);

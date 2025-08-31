@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!currentUser) {
                 openModal(authModal);
                 loginTab.click();
-                showMessage(loginMessage, 'Favorilere ürün eklemek için lütfen giriş yapın veya kayıt olun.', 'info');
+                showMessage(loginMessage, 'Favorilere ürün eklemek için lütfen giriş yapın veya kayıt olun.', 'error');
                 return;
             }
 
@@ -370,13 +370,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 20);
     }
 
-    // Hızlı Görüntüleme (Quick View) İşleyicisi
-    const quickViewElements = document.querySelectorAll('.quick-view');
-    quickViewElements.forEach(el => {
-        el.addEventListener('click', function () {
-            const productCard = this.closest('.product-card');
-            const productName = productCard.querySelector('h3').textContent;
-            alert(`${productName} ürününü detaylı incelemek için yakında açılacak olan ürün sayfasını kullanabilirsiniz!`);
-        });
-    });
+
 });

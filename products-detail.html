@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stilistre Admin Paneli</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6a5acd;
+            --secondary: #9370db;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --text: #4a4a4a;
+            --background: #fff9fb;
+            --sidebar: #2c3e50;
+            --sidebar-hover: #34495e;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text);
+            background-color: #f5f7f9;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 22px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .sidebar-header span {
+            color: var(--accent);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--sidebar-hover);
+            color: white;
+            border-left: 4px solid var(--accent);
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar */
+        .topbar {
+            background-color: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-bar {
+            display: flex;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+        }
+
+        .search-bar button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 30px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+
+        .bg-primary { background-color: var(--primary); color: white; }
+        .bg-success { background-color: #28a745; color: white; }
+        .bg-warning { background-color: #ffc107; color: white; }
+        .bg-danger { background-color: #dc3545; color: white; }
+
+        .stat-info h3 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .table-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table-header h2 {
+            font-size: 18px;
+            color: var(--dark);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .edit-btn {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Dashboard Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Image Preview */
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar .menu-text {
+                display: none;
+            }
+            
+            .sidebar-header h2 {
+                font-size: 16px;
+                text-align: center;
+            }
+            
+            .sidebar-menu a {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .sidebar-menu i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .topbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>STİL<span>İSTRE</span></h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-home"></i> <span class="menu-text">Dashboard</span></a></li>
+            <li><a href="#" data-section="products"><i class="fas fa-tshirt"></i> <span class="menu-text">Ürünler</span></a></li>
+            <li><a href="#" data-section="categories"><i class="fas fa-list"></i> <span class="menu-text">Kategoriler</span></a></li>
+            <li><a href="#" data-section="users"><i class="fas fa-users"></i> <span class="menu-text">Kullanıcılar</span></a></li>
+            <li><a href="index.html"><i class="fas fa-sign-out-alt" href="index.html"></i> <span class="menu-text">Siteye Dön</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Dashboard Section -->
+            <div class="section active" id="dashboard">
+                <h1 class="text-2xl font-bold mb-5">Dashboard</h1>
+                
+                <div class="dashboard-cards">
+                    <div class="card stat-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>156</h3>
+                            <p>Toplam Ürün</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card stat-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>542</h3>
+                            <p>Toplam Kullanıcı</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card stat-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>89</h3>
+                            <p>Bekleyen Sipariş</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card stat-card">
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Kategori</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Son Eklenen Ürünler</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th>Kategori</th>
+                                <th>Fiyat</th>
+                                <th>Stok</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Yazlık Desenli Elbise</td>
+                                <td>Kadın Giyim</td>
+                                <td>₺349.99</td>
+                                <td>45</td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pamuklu Erkek Tişört</td>
+                                <td>Erkek Giyim</td>
+                                <td>₺129.99</td>
+                                <td>78</td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kadın Spor Ayakkabı</td>
+                                <td>Ayakkabı</td>
+                                <td>₺449.99</td>
+                                <td>23</td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Products Section -->
+            <div class="section" id="products">
+                <div class="flex justify-between items-center mb-5">
+                    <h1 class="text-2xl font-bold">Ürün Yönetimi</h1>
+                    <button class="btn btn-primary" id="addProductBtn">Yeni Ürün Ekle</button>
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Tüm Ürünler</h2>
+                        
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Ürün Görseli</th>
+                                <th>Ürün Adı</th>
+                                <th>Kategori</th>
+                                <th>Fiyat</th>
+                                <th>Stok</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&q=80" class="w-10 h-10 object-cover rounded"></td>
+                                <td>Yazlık Desenli Elbise</td>
+                                <td>Kadın Giyim</td>
+                                <td>₺349.99</td>
+                                <td>45</td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><img src="https://images.unsplash.com/photo-1521341057461-6eb5f40b07ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&q=80" class="w-10 h-10 object-cover rounded"></td>
+                                <td>Pamuklu Erkek Tişört</td>
+                                <td>Erkek Giyim</td>
+                                <td>₺129.99</td>
+                                <td>78</td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&q=80" class="w-10 h-10 object-cover rounded"></td>
+                                <td>Kadın Spor Ayakkabı</td>
+                                <td>Ayakkabı</td>
+                                <td>₺449.99</td>
+                                <td>23</td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Add Product Form -->
+                <div class="form-container mt-8" id="productForm" style="display: none;">
+                    <h2 class="text-xl font-bold mb-5">Yeni Ürün Ekle</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">Ürün Adı</label>
+                            <input type="text" id="productName" placeholder="Ürün adını girin">
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategory">Kategori</label>
+                            <select id="productCategory">
+                                <option value="">Kategori seçin</option>
+                                <option value="1">Kadın Giyim</option>
+                                <option value="2">Erkek Giyim</option>
+                                <option value="3">Çocuk Giyim</option>
+                                <option value="4">Ayakkabı</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productPrice">Fiyat</label>
+                            <input type="number" id="productPrice" placeholder="Ürün fiyatını girin">
+                        </div>
+                        <div class="form-group">
+                            <label for="productDiscount">İndirimli Fiyat (Opsiyonel)</label>
+                            <input type="number" id="productDiscount" placeholder="İndirimli fiyatı girin">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productStock">Stok Adedi</label>
+                            <input type="number" id="productStock" placeholder="Stok adedini girin">
+                        </div>
+                        <div class="form-group">
+                            <label for="productBrand">Marka</label>
+                            <input type="text" id="productBrand" placeholder="Marka adını girin">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productDescription">Ürün Açıklaması</label>
+                        <textarea id="productDescription" placeholder="Ürün açıklamasını girin"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productImage">Ürün Görseli</label>
+                        <input type="file" id="productImage">
+                        <div class="image-preview">
+                            <img id="previewImage" src="" alt="Önizleme">
+                            <span id="noImageText">Görsel önizleme</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button class="btn" style="background: #ccc;">İptal</button>
+                        <button class="btn btn-primary">Ürünü Ekle</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Categories Section -->
+            <div class="section" id="categories">
+                <div class="flex justify-between items-center mb-5">
+                    <h1 class="text-2xl font-bold">Kategori Yönetimi</h1>
+                    <button class="btn btn-primary" id="addCategoryBtn">Yeni Kategori Ekle</button>
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Tüm Kategoriler</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Kategori Adı</th>
+                                <th>Ürün Sayısı</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Kadın Giyim</td>
+                                <td>56</td>
+                                <td><span class="text-green-500">Aktif</span></td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Erkek Giyim</td>
+                                <td>42</td>
+                                <td><span class="text-green-500">Aktif</span></td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Çocuk Giyim</td>
+                                <td>35</td>
+                                <td><span class="text-green-500">Aktif</span></td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Ayakkabı</td>
+                                <td>23</td>
+                                <td><span class="text-green-500">Aktif</span></td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Add Category Form -->
+                <div class="form-container mt-8" id="categoryForm" style="display: none;">
+                    <h2 class="text-xl font-bold mb-5">Yeni Kategori Ekle</h2>
+                    
+                    <div class="form-group">
+                        <label for="categoryName">Kategori Adı</label>
+                        <input type="text" id="categoryName" placeholder="Kategori adını girin">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="categoryDescription">Kategori Açıklaması</label>
+                        <textarea id="categoryDescription" placeholder="Kategori açıklamasını girin"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="categoryImage">Kategori Görseli</label>
+                        <input type="file" id="categoryImage">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="categoryStatus">Durum</label>
+                        <select id="categoryStatus">
+                            <option value="active">Aktif</option>
+                            <option value="passive">Pasif</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button class="btn" style="background: #ccc;">İptal</button>
+                        <button class="btn btn-primary">Kategoriyi Ekle</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Users Section -->
+            <div class="section" id="users">
+                <h1 class="text-2xl font-bold mb-5">Kullanıcı Yönetimi</h1>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Tüm Kullanıcılar</h2>
+                        <button class="btn btn-primary">Yeni Kullanıcı Ekle</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Kullanıcı</th>
+                                <th>E-posta</th>
+                                <th>Kayıt Tarihi</th>
+                                <th>Rol</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">A</div>
+                                        <div>Ahmet Yılmaz</div>
+                                    </div>
+                                </td>
+                                <td>ahmet@example.com</td>
+                                <td>12.05.2023</td>
+                                <td><span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Üye</span></td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white">M</div>
+                                        <div>Mehmet Demir</div>
+                                    </div>
+                                </td>
+                                <td>mehmet@example.com</td>
+                                <td>28.04.2023</td>
+                                <td><span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Admin</span></td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center text-white">A</div>
+                                        <div>Ayşe Kaya</div>
+                                    </div>
+                                </td>
+                                <td>ayse@example.com</td>
+                                <td>15.03.2023</td>
+                                <td><span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Üye</span></td>
+                                <td class="action-buttons">
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+           
+
+    <script>
+        // Section switching
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('.sidebar-menu a').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Hide all sections
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show the target section
+                const sectionId = this.getAttribute('data-section');
+                if (sectionId) {
+                    document.getElementById(sectionId).classList.add('active');
+                    
+                    // Hide forms when switching sections
+                    document.getElementById('productForm').style.display = 'none';
+                    document.getElementById('categoryForm').style.display = 'none';
+                }
+            });
+        });
+        
+        // Toggle product form
+        document.getElementById('addProductBtn').addEventListener('click', function() {
+            const form = document.getElementById('productForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+        
+        // Toggle category form
+        document.getElementById('addCategoryBtn').addEventListener('click', function() {
+            const form = document.getElementById('categoryForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+        
+        // Image preview functionality
+        document.getElementById('productImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                    document.getElementById('previewImage').style.display = 'block';
+                    document.getElementById('noImageText').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Sample data for demonstration
+        const sampleProducts = [
+            { id: 1, name: "Yazlık Desenli Elbise", category: "Kadın Giyim", price: "₺349.99", stock: 45 },
+            { id: 2, name: "Pamuklu Erkek Tişört", category: "Erkek Giyim", price: "₺129.99", stock: 78 },
+            { id: 3, name: "Kadın Spor Ayakkabı", category: "Ayakkabı", price: "₺449.99", stock: 23 }
+        ];
+        
+        // You can use the sample data to dynamically populate tables
+        // This is just a demonstration - in a real application you would fetch data from a server
+    </script>
+</body>
+</html>

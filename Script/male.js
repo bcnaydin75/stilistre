@@ -254,7 +254,7 @@ favoriteIcons.forEach(icon => {
             authModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             loginTab.click();
-            showMessage(loginMessage, 'Favorilere eklemek için giriş yapmalısınız.', 'info');
+            showMessage(loginMessage, 'Favorilere ürün eklemek için lütfen giriş yapın veya kayıt olun.', 'error');
         } else {
             // Giriş varsa index.php'ye yönlendir
             window.location.href = 'index.php';

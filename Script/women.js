@@ -430,7 +430,7 @@ favoriteIcons.forEach(icon => {
             authModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             loginTab.click(); // Giriş sekmesini aktifleştir
-            showMessage(loginMessage, 'Favorilere ürün eklemek için lütfen giriş yapın.', 'info');
+            showMessage(loginMessage, 'Favorilere ürün eklemek için lütfen giriş yapın veya kayıt olun.', 'error');
         }
     });
 });

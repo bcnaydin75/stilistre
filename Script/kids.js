@@ -442,13 +442,13 @@ favoriteIcons.forEach(icon => {
             favoriteLoginModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             // Favori modalındaki mesajı ayarla
-            favoriteLoginModal.querySelector('.modal-body p').textContent = 'Favorilere ürün eklemek için lütfen giriş yapın veya kayıt olun.';
+            favoriteLoginModal.querySelector('.modal-body p').textContent = 'Favorilere ürün eklemek için lütfen giriş yapın veya kayıt olun.','error';
         } else {
             // Eğer favori modalı HTML'de yoksa, doğrudan ana giriş modalını açabiliriz
             authModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             loginTab.click(); // Giriş sekmesini aktifleştir
-            showMessage(loginMessage, 'Favorilere ürün eklemek için lütfen giriş yapın.', 'info');
+            showMessage(loginMessage, 'Favorilere ürün eklemek için lütfen giriş yapın veya kayıt olun.', 'error');
         }
     });
 });
