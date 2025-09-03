@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>1</td><td>Erkek Giyim</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm">Sil</button></td></tr>
-                    <tr><td>2</td><td>Kadın Giyim</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm">Sil</button></td></tr>
+                    <tr><td>1</td><td>Erkek Giyim</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm delete-btn" data-type="category" data-id="1">Sil</button></td></tr>
+                    <tr><td>2</td><td>Kadın Giyim</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm delete-btn" data-type="category" data-id="2">Sil</button></td></tr>
                 </tbody>
             </table>
         `,
@@ -97,8 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>1</td><td>T-shirt</td><td>Erkek Giyim</td><td>Marka A</td><td>99.99 TL</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm">Sil</button></td></tr>
-                    <tr><td>2</td><td>Kot Pantolon</td><td>Kadın Giyim</td><td>Marka B</td><td>199.99 TL</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm">Sil</button></td></tr>
+                    <tr><td>1</td><td>T-shirt</td><td>Erkek Giyim</td><td>Marka A</td><td>99.99 TL</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm delete-btn" data-type="product" data-id="1">Sil</button></td></tr>
+                    <tr><td>2</td><td>Kot Pantolon</td><td>Kadın Giyim</td><td>Marka B</td><td>199.99 TL</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm delete-btn" data-type="product" data-id="2">Sil</button></td></tr>
                 </tbody>
             </table>
         `,
@@ -121,8 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>1</td><td>Marka A</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm">Sil</button></td></tr>
-                    <tr><td>2</td><td>Marka B</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm">Sil</button></td></tr>
+                    <tr><td>1</td><td>Marka A</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm delete-btn" data-type="brand" data-id="1">Sil</button></td></tr>
+                    <tr><td>2</td><td>Marka B</td><td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm delete-btn" data-type="brand" data-id="2">Sil</button></td></tr>
                 </tbody>
             </table>
         `,
@@ -192,38 +192,86 @@ document.addEventListener('DOMContentLoaded', () => {
 
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault(); // Varsayılan bağlantı davranışını engelle
+            e.preventDefault(); 
             const page = e.target.dataset.page;
             loadPage(page);
 
-            // Aktif linki işaretle
             navLinks.forEach(nav => nav.classList.remove('active'));
             e.target.classList.add('active');
         });
     });
 
     function loadPage(pageName) {
-        // Sayfa içeriğini yükle
         if (pageTemplates[pageName]) {
             pageContent.innerHTML = pageTemplates[pageName];
-
-            // Başlığı güncelle (ilk harfi büyük yap ve boşlukları ekle)
             const titleText = pageName.charAt(0).toUpperCase() + pageName.slice(1).replace(/([A-Z])/g, ' $1').trim();
             pageTitle.textContent = titleText;
 
-            // Bazı sayfalara özel JS fonksiyonlarını çağır (örneğin form submit handler'ları)
             if (pageName === 'categories') {
                 attachCategoryFormHandler();
+                // Kategoriler sayfasında silme butonlarını dinle
+                attachDeleteHandlers('category');
             } else if (pageName === 'products') {
                 attachProductFormHandler();
+                // Ürünler sayfasında silme butonlarını dinle
+                attachDeleteHandlers('product');
             } else if (pageName === 'brands') {
                 attachBrandFormHandler();
+                // Markalar sayfasında silme butonlarını dinle
+                attachDeleteHandlers('brand');
             }
-            // Diğer sayfalar için de benzer şekilde eklenebilir.
-
         } else {
             pageContent.innerHTML = `<h2>Sayfa Bulunamadı</h2><p>Aradığınız sayfa mevcut değil.</p>`;
             pageTitle.textContent = 'Hata';
+        }
+    }
+
+    // --- SİLME İŞLEVSELLİĞİ İÇİN GÜNCELLENMİŞ KODLAR ---
+
+    function attachDeleteHandlers(type) {
+        // Sayfadaki tüm silme butonlarını seçer
+        const deleteButtons = document.querySelectorAll(`.delete-btn[data-type="${type}"]`);
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                // `e.target` yerine `e.currentTarget` kullanarak, ikonun kendisine değil, butona tıklandığından emin oluruz.
+                const id = e.currentTarget.dataset.id;
+                const row = e.currentTarget.closest('tr');
+                deleteItem(type, id, row);
+            });
+        });
+    }
+
+    function deleteItem(type, id, rowElement) {
+        // Onay penceresi göster
+        if (confirm(`Gerçekten bu ${type} öğesini silmek istediğinizden emin misiniz?`)) {
+            // Evet derse, silme işlemini başlat
+            // Buraya gerçek API çağrınızı ekleyeceksiniz (fetch, axios vb.)
+            // Örneğin:
+            // fetch(`/api/${type}/delete`, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({ id: id })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.success) {
+            //         rowElement.remove(); // Başarılıysa DOM'dan kaldır
+            //         alert(`${type} başarıyla silindi.`);
+            //     } else {
+            //         alert(`Hata: ${type} silinemedi. Mesaj: ` + data.message);
+            //     }
+            // })
+            // .catch(error => {
+            //     console.error('Hata:', error);
+            //     alert('Silme işlemi sırasında bir hata oluştu.');
+            // });
+
+            // Şimdilik sadece simülasyon yapıyoruz
+            console.log(`Simülasyon: ${type} (ID: ${id}) siliniyor.`);
+            rowElement.remove();
+            alert(`${type} başarıyla silindi! (Bu sadece örnek, gerçek silme işlemi yok)`);
         }
     }
 
@@ -240,10 +288,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (categoryName) {
                     console.log('Yeni Kategori Eklendi:', categoryName);
                     alert(`Kategori "${categoryName}" başarıyla eklendi! (Bu sadece örnek, gerçek veritabanı işlemi yok)`);
-                    // Gerçek uygulamada burada bir API çağrısı yapacaksın (fetch, axios vb.)
-                    // ve başarılı olursa listeyi güncelleyeceksin.
-                    categoryNameInput.value = ''; // Inputu temizle
-                    updateCategoryList(categoryName); // Listeyi güncelle (örnek)
+                    categoryNameInput.value = '';
+                    updateCategoryList(categoryName);
                 } else {
                     alert('Lütfen kategori adını girin.');
                 }
@@ -254,18 +300,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCategoryList(newCategoryName) {
         const categoryListBody = document.querySelector('#categoryList tbody');
         if (categoryListBody) {
-            const newRow = document.createElement('tr');
-            // Basit bir ID ataması, gerçekte veritabanı ID'si olacak
             const newId = categoryListBody.children.length + 1;
+            const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>${newId}</td>
                 <td>${newCategoryName}</td>
-                <td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm">Sil</button></td>
+                <td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm delete-btn" data-type="category" data-id="${newId}">Sil</button></td>
             `;
             categoryListBody.appendChild(newRow);
+            const deleteButton = newRow.querySelector('.delete-btn');
+            deleteButton.addEventListener('click', (e) => {
+                deleteItem('category', newId, newRow);
+            });
         }
     }
-
 
     function attachProductFormHandler() {
         const form = document.getElementById('addProductForm');
@@ -277,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productBrand = document.getElementById('productBrand').value;
                 const productPrice = document.getElementById('productPrice').value;
                 const productDescription = document.getElementById('productDescription').value.trim();
-                const productImage = document.getElementById('productImage').files[0]; // File objesi
+                const productImage = document.getElementById('productImage').files[0];
 
                 if (productName && productCategory && productBrand && productPrice) {
                     const productData = {
@@ -286,13 +334,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         brand: productBrand,
                         price: parseFloat(productPrice),
                         description: productDescription,
-                        image: productImage ? productImage.name : 'N/A' // Sadece dosya adını alıyoruz
+                        image: productImage ? productImage.name : 'N/A'
                     };
                     console.log('Yeni Ürün Eklendi:', productData);
                     alert(`Ürün "${productName}" başarıyla eklendi! (Bu sadece örnek)`);
-                    // Gerçek uygulamada burada bir API çağrısı yapacaksın
-                    // ve başarılı olursa listeyi güncelleyeceksin.
-                    form.reset(); // Formu temizle
+                    form.reset();
                     updateProductList(productData);
                 } else {
                     alert('Lütfen tüm gerekli alanları doldurun.');
@@ -304,20 +350,23 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateProductList(newProduct) {
         const productListBody = document.querySelector('#productList tbody');
         if (productListBody) {
-            const newRow = document.createElement('tr');
             const newId = productListBody.children.length + 1;
+            const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>${newId}</td>
                 <td>${newProduct.name}</td>
                 <td>${newProduct.category}</td>
                 <td>${newProduct.brand}</td>
                 <td>${newProduct.price.toFixed(2)} TL</td>
-                <td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm">Sil</button></td>
+                <td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm delete-btn" data-type="product" data-id="${newId}">Sil</button></td>
             `;
             productListBody.appendChild(newRow);
+            const deleteButton = newRow.querySelector('.delete-btn');
+            deleteButton.addEventListener('click', (e) => {
+                deleteItem('product', newId, newRow);
+            });
         }
     }
-
 
     function attachBrandFormHandler() {
         const form = document.getElementById('addBrandForm');
@@ -342,14 +391,70 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateBrandList(newBrandName) {
         const brandListBody = document.querySelector('#brandList tbody');
         if (brandListBody) {
-            const newRow = document.createElement('tr');
             const newId = brandListBody.children.length + 1;
+            const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>${newId}</td>
                 <td>${newBrandName}</td>
-                <td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm">Sil</button></td>
+                <td><button class="btn btn-sm">Düzenle</button> <button class="btn btn-sm delete-btn" data-type="brand" data-id="${newId}">Sil</button></td>
             `;
             brandListBody.appendChild(newRow);
+            const deleteButton = newRow.querySelector('.delete-btn');
+            deleteButton.addEventListener('click', (e) => {
+                deleteItem('brand', newId, newRow);
+            });
         }
     }
 });
+
+// Bu listener'lar, sayfa içeriği değiştiğinde yeniden atanmıyorsa
+// bu şekilde kalabilir. Ancak, eğer formlar dinamik yükleniyorsa
+// bu kodları da `loadPage` içindeki `attachCategoryFormHandler`
+// fonksiyonuna entegre etmeniz daha doğru olur.
+
+document.getElementById('saveCategoryBtn')?.addEventListener('click', function(e) {
+    e.preventDefault(); 
+    const categoryName = document.getElementById('categoryName').value;
+
+    if (!categoryName) {
+        alert('Kategori adı boş olamaz.');
+        return;
+    }
+
+    fetch('add_category.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ categoryName: categoryName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            window.location.reload();
+        } else {
+            alert('Hata: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('İşlem sırasında bir hata oluştu.');
+    });
+});
+
+document.getElementById('addCategoryBtn')?.addEventListener('click', function() {
+    document.getElementById('categoryForm').style.display = 'block';
+});
+
+
+function attachDeleteHandlers(type) {
+    const deleteButtons = document.querySelectorAll(`.delete-btn[data-type="${type}"]`);
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            const row = e.currentTarget.closest('tr');
+            deleteItem(type, id, row);
+        });
+    });
+}
