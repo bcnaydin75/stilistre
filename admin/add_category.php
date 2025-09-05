@@ -1,47 +1,56 @@
 <?php
-// Hata ayıklama ayarları
+// Hata raporlamayı aç
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Veritabanı bağlantı dosyasını dahil et
-include_once '../db.php';
+// Veritabanı bağlantısını içeriyor (PDO bağlantısı sağlanmalı)
+require_once __DIR__ . '/../db.php';
 
-// Sadece POST isteği ile erişime izin ver
+header('Content-Type: application/json');
+
+// Sadece POST isteği ile çalışmasını sağla
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Geçersiz istek metodu.']);
     exit;
 }
 
-// Gelen JSON verisini al
+// Gelen veriyi al ve boş olup olmadığını kontrol et
 $data = json_decode(file_get_contents("php://input"), true);
+$categoryName = $data['categoryName'] ?? '';
 
-if (empty($data['categoryName'])) {
+if (empty($categoryName)) {
     echo json_encode(['success' => false, 'message' => 'Kategori adı boş olamaz.']);
     exit;
 }
 
-$categoryName = mysqli_real_escape_string($conn, $data['categoryName']);
-$status = "Aktif"; // Varsayılan olarak aktif yapabilirsiniz
+try {
+    // Veritabanı bağlantısı `db.php`'den geliyor ve adı `$pdo`
+    if (!isset($pdo)) {
+        throw new Exception("Veritabanı bağlantısı kurulamadı. Lütfen db.php dosyasını kontrol edin.");
+    }
 
-// SQL sorgusunu hazırla ve çalıştır
-$sql = "INSERT INTO categories (category_name, status) VALUES (?, ?)";
-$stmt = mysqli_prepare($conn, $sql);
+    // SQL enjeksiyonuna karşı korumalı prepared statement kullan
+    $stmt = $pdo->prepare("INSERT INTO categories (category_name) VALUES (?)");
+    
+    // Değerleri bağla
+    $stmt->execute([$categoryName]);
 
-if ($stmt === false) {
-    echo json_encode(['success' => false, 'message' => 'Sorgu hazırlanamadı: ' . mysqli_error($conn)]);
-    exit;
+    // Başarılı olursa son eklenen ID'yi al
+    $newCategoryId = $pdo->lastInsertId();
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Kategori başarıyla eklendi.',
+        'id' => $newCategoryId,
+        'category_name' => $categoryName
+    ]);
+
+} catch (PDOException $e) {
+    // PDO hatalarını yakala
+    echo json_encode(['success' => false, 'message' => 'Veritabanı hatası: ' . $e->getMessage()]);
+} catch (Exception $e) {
+    // Diğer genel hataları yakala
+    echo json_encode(['success' => false, 'message' => 'Hata: ' . $e->getMessage()]);
 }
-
-mysqli_stmt_bind_param($stmt, "ss", $categoryName, $status);
-
-if (mysqli_stmt_execute($stmt)) {
-    echo json_encode(['success' => true, 'message' => 'Kategori başarıyla eklendi.']);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Kategori eklenirken bir hata oluştu: ' . mysqli_stmt_error($stmt)]);
-}
-mysqli_stmt_close($stmt);
-mysqli_close($conn);
-
 ?>

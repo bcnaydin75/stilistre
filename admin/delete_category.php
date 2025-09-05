@@ -1,58 +1,56 @@
 <?php
-// Hata ayıklama ayarları
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+// Başlık ve hata raporlama ayarları
+// Bu satırları ekledik, emin olun hala duruyorlar
 error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Veritabanı bağlantısını dahil et
-include_once 'db.php';
+// ... devamı
+header('Content-Type: application/json');
 
-// Sadece POST isteği ile erişime izin ver
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
-    echo json_encode(['success' => false, 'message' => 'Geçersiz istek metodu.']);
+// Gelen veriyi kontrol etmek için hata raporlamayı aç
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Gerekli veritabanı dosyasını dahil et
+require_once '../db.php'; 
+
+// Gelen JSON verisini al
+$json_input = file_get_contents('php://input');
+$data = json_decode($json_input, true);
+
+// Gelen veriyi kontrol etmek için loglama yapın
+file_put_contents('delete_log.txt', "Gelen ham veri: " . $json_input . "\n", FILE_APPEND);
+file_put_contents('delete_log.txt', "Çözümlenmiş veri: " . print_r($data, true) . "\n", FILE_APPEND);
+
+$categoryId = $data['id'] ?? null;
+
+// Kategori ID'si boşsa hata mesajı dön
+if (!$categoryId) {
+    echo json_encode(['success' => false, 'message' => 'Geçersiz kategori ID\'si.']);
     exit;
 }
-
-// category_id POST verisini kontrol et
-if (!isset($_POST['category_id']) || empty($_POST['category_id'])) {
-    http_response_code(400); // Bad Request
-    echo json_encode(['success' => false, 'message' => 'Kategori ID\'si eksik.']);
-    exit;
-}
-
-$category_id = intval($_POST['category_id']);
-
+// delete_category.php
 try {
-    // Veritabanı işlemleri: Önce kategoriye ait ürünlerin kategori ID'sini NULL yap
-    // Bu, ürünlerin kaybolmasını önler ve kategori silinse bile ürünlerin kalmasını sağlar
-    $update_query = "UPDATE products SET category_id = NULL WHERE category_id = ?";
-    $stmt_update = mysqli_prepare($conn, $update_query);
-    mysqli_stmt_bind_param($stmt_update, "i", $category_id);
-    mysqli_stmt_execute($stmt_update);
-    mysqli_stmt_close($stmt_update);
-
-    // Kategori tablosundan ilgili kategoriyi sil
-    $delete_query = "DELETE FROM categories WHERE id = ?";
-    $stmt_delete = mysqli_prepare($conn, $delete_query);
-    mysqli_stmt_bind_param($stmt_delete, "i", $category_id);
+    // Kategori silme sorgusunu hazırla ve çalıştır
+    $stmt = $pdo->prepare("DELETE FROM categories WHERE id = :id");
     
-    if (mysqli_stmt_execute($stmt_delete)) {
-        // Silme başarılıysa
-        echo json_encode(['success' => true, 'message' => 'Kategori başarıyla silindi.']);
+    // Bu satırı ekleyerek gönderilen ID'yi tekrar kontrol edelim
+    file_put_contents('delete_log.txt', "Silinecek ID: " . $categoryId . "\n", FILE_APPEND);
+
+    $stmt->bindParam(':id', $categoryId, PDO::PARAM_INT);
+    
+    if ($stmt->execute()) {
+        // execute() metodu başarılıysa, kaç satırın etkilendiğini kontrol edelim
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(['success' => true, 'message' => 'Kategori başarıyla silindi.']);
+        } else {
+            // Hiçbir satır silinmediyse
+            echo json_encode(['success' => false, 'message' => 'Silinecek kategori bulunamadı.']);
+        }
     } else {
-        // Silme başarısızsa
-        http_response_code(500); // Internal Server Error
-        echo json_encode(['success' => false, 'message' => 'Kategori silinirken bir hata oluştu: ' . mysqli_error($conn)]);
+        echo json_encode(['success' => false, 'message' => 'Kategori silinirken bir hata oluştu.']);
     }
-    
-    mysqli_stmt_close($stmt_delete);
-
-} catch (Exception $e) {
-    http_response_code(500); // Internal Server Error
+} catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Veritabanı hatası: ' . $e->getMessage()]);
 }
-
-// Veritabanı bağlantısını kapat
-mysqli_close($conn);
 ?>

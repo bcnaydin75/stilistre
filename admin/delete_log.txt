@@ -1,0 +1,91 @@
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: {"id":"2"}
+Çözümlenmiş veri: Array
+(
+    [id] => 2
+)
+
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: {"id":"2"}
+Çözümlenmiş veri: Array
+(
+    [id] => 2
+)
+
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: {"id":"2"}
+Çözümlenmiş veri: Array
+(
+    [id] => 2
+)
+
+Silinecek ID: 2
+Gelen ham veri: 
+Çözümlenmiş veri: 
+Gelen ham veri: {"id":"1"}
+Çözümlenmiş veri: Array
+(
+    [id] => 1
+)
+
+Silinecek ID: 1
+Gelen ham veri: {"id":"3"}
+Çözümlenmiş veri: Array
+(
+    [id] => 3
+)
+
+Silinecek ID: 3
+Gelen ham veri: {"id":"4"}
+Çözümlenmiş veri: Array
+(
+    [id] => 4
+)
+
+Silinecek ID: 4
+Gelen ham veri: {"id":"5"}
+Çözümlenmiş veri: Array
+(
+    [id] => 5
+)
+
+Silinecek ID: 5
+Gelen ham veri: {"id":"4"}
+Çözümlenmiş veri: Array
+(
+    [id] => 4
+)
+
+Silinecek ID: 4
+Gelen ham veri: {"id":"5"}
+Çözümlenmiş veri: Array
+(
+    [id] => 5
+)
+
+Silinecek ID: 5

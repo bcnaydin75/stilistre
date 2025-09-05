@@ -1,14 +1,17 @@
 <?php
-// Hata ayıklama ayarları
+// Hata ayıklama ayarlarını aç
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Veritabanı bağlantı dosyasını dahil et
+// Bu dosya artık PDO bağlantısı sağlamalıdır.
 include_once '../db.php';
 
 // Veritabanı bağlantısını kontrol et
-if (!$conn) {
+// include_once ile hata oluşursa PHP bir uyarı verir.
+// `$pdo` nesnesinin varlığını kontrol ederek bağlantı hatasını yakalayabiliriz.
+if (!isset($pdo)) {
     die("<div style='text-align:center; padding: 20px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 5px;'>
         Veritabanı bağlantısı kurulamadı. Lütfen 'db.php' dosyasını ve bağlantı bilgilerini kontrol edin.
     </div>");
@@ -16,69 +19,60 @@ if (!$conn) {
 
 // Tüm verileri çekme işlemi
 try {
-    // Dashboard verileri
-    $total_products_query = mysqli_query($conn, "SELECT COUNT(*) as count FROM products");
-    $total_products = mysqli_fetch_assoc($total_products_query)['count'];
+    // --- Dashboard verileri ---
+    $total_products_query = $pdo->query("SELECT COUNT(*) as count FROM products");
+    $total_products = $total_products_query->fetchColumn();
 
-    $total_users_query = mysqli_query($conn, "SELECT COUNT(*) as count FROM users");
-    $total_users = mysqli_fetch_assoc($total_users_query)['count'];
+    $total_users_query = $pdo->query("SELECT COUNT(*) as count FROM users");
+    $total_users = $total_users_query->fetchColumn();
 
-    $total_categories_query = mysqli_query($conn, "SELECT COUNT(*) as count FROM categories");
-    $total_categories = mysqli_fetch_assoc($total_categories_query)['count'];
+    $total_categories_query = $pdo->query("SELECT COUNT(*) as count FROM categories");
+    $total_categories = $total_categories_query->fetchColumn();
 
-    // Düzeltme: Yalnızca en son eklenen ürünü çekmek için LIMIT 1 olarak ayarlandı
-    $latest_products_query = mysqli_query($conn, "
+    // Düzeltme: Yalnızca en son eklenen ürünü çekmek için
+    $latest_products_query = $pdo->query("
         SELECT p.id, p.product_name, p.price, p.stock, p.image_url, c.category_name
         FROM products p
         JOIN categories c ON p.category_id = c.id
         ORDER BY p.created_at DESC
         LIMIT 1
     ");
-    $latest_product = mysqli_fetch_assoc($latest_products_query); // Tek bir ürün satırı çekiyoruz
+    $latest_product = $latest_products_query->fetch(PDO::FETCH_ASSOC);
 
-    // Ürün Yönetimi verileri (Tüm Ürünler)
-    $all_products_query = mysqli_query($conn, "
+    // --- Ürün Yönetimi verileri (Tüm Ürünler) ---
+    $all_products_query = $pdo->query("
         SELECT p.id, p.product_name, p.price, p.stock, p.image_url, c.category_name
         FROM products p
         JOIN categories c ON p.category_id = c.id
         ORDER BY p.id DESC
     ");
-    $all_products = [];
-    while ($row = mysqli_fetch_assoc($all_products_query)) {
-        $all_products[] = $row;
-    }
-    
- // Kategori Yönetimi verileri
-$all_categories_query = mysqli_query($conn, "
-    SELECT c.id, c.category_name, COUNT(p.id) as product_count, c.status
-    FROM categories c
-    LEFT JOIN products p ON c.id = p.category_id
-    GROUP BY c.id
-    ORDER BY c.id ASC
-");
-    $all_categories = [];
-    while ($row = mysqli_fetch_assoc($all_categories_query)) {
-        $all_categories[] = $row;
-    }
+    $all_products = $all_products_query->fetchAll(PDO::FETCH_ASSOC);
 
-    // Kullanıcı Yönetimi verileri
-    $all_users_query = mysqli_query($conn, "
+    // --- Kategori Yönetimi verileri ---
+    $all_categories_query = $pdo->query("
+        SELECT c.id, c.category_name, COUNT(p.id) as product_count, c.status
+        FROM categories c
+        LEFT JOIN products p ON c.id = p.category_id
+        GROUP BY c.id
+        ORDER BY c.id ASC
+    ");
+    $all_categories = $all_categories_query->fetchAll(PDO::FETCH_ASSOC);
+
+    // --- Kullanıcı Yönetimi verileri ---
+    $all_users_query = $pdo->query("
         SELECT id, username, email, created_at, role
         FROM users
         ORDER BY created_at DESC
     ");
-    $all_users = [];
-    while ($row = mysqli_fetch_assoc($all_users_query)) {
-        $all_users[] = $row;
-    }
+    $all_users = $all_users_query->fetchAll(PDO::FETCH_ASSOC);
 
-} catch (Exception $e) {
+} catch (PDOException $e) {
+    // PDO hataları yakalanır
     die("<div style='text-align:center; padding: 20px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 5px;'>
         Veritabanı sorgularında bir hata oluştu: " . $e->getMessage() . "
     </div>");
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -97,8 +91,8 @@ $all_categories_query = mysqli_query($conn, "
         </div>
         <ul class="sidebar-menu">
             <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-home"></i> <span class="menu-text">Dashboard</span></a></li>
-            <li><a href="#" data-section="products"><i class="fas fa-tshirt"></i> <span class="menu-text">Ürünler</span></a></li>
             <li><a href="#" data-section="categories"><i class="fas fa-list"></i> <span class="menu-text">Kategoriler</span></a></li>
+            <li><a href="#" data-section="products"><i class="fas fa-tshirt"></i> <span class="menu-text">Ürünler</span></a></li>
             <li><a href="#" data-section="users"><i class="fas fa-users"></i> <span class="menu-text">Kullanıcılar</span></a></li>
             <li><a href="index.html" ><i class="fas fa-sign-out-alt" ></i> <span class="menu-text" >Siteye Dön</span></a></li>
         </ul>
@@ -340,10 +334,11 @@ $all_categories_query = mysqli_query($conn, "
                 <input type="text" id="categoryName" name="categoryName" placeholder="Kategori adını girin" required>
             </div>
             
-            <div class="form-footer">
-                <button type="button" class="btn" onclick="document.getElementById('categoryForm').style.display='none';" style="background: #ccc;">İptal</button>
-                <button type="button" class="btn btn-primary" id="saveCategoryBtn">Kategoriyi Ekle</button>
-            </div>
+          <div class="form-footer">
+    <button type="button" class="btn" onclick="document.getElementById('categoryForm').style.display='none';" style="background: #ccc;">İptal</button>
+    
+    <button type="submit" class="btn btn-primary">Kategoriyi Ekle</button>
+</div>
         </form>
     </div>
 </div>
@@ -462,7 +457,6 @@ $all_categories_query = mysqli_query($conn, "
             }
         });
     </script>
-    <script src="../Script/admin.js"></script>
 <div id="deleteConfirmationBox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 2000; justify-content: center; align-items: center;">
     <div class="confirmation-content" style="background: #fff; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);">
         <p style="font-size: 18px; margin-bottom: 20px;">Bu öğeyi silmek istediğinizden emin misiniz?</p>
@@ -470,5 +464,6 @@ $all_categories_query = mysqli_query($conn, "
         <button id="cancelDelete" class="btn btn-secondary">İptal</button>
     </div>
 </div>
+<script src="../Script/admin.js"></script>
 </body>
 </html>
