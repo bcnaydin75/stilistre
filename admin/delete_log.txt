@@ -89,3 +89,45 @@ Gelen ham veri: {"id":"5"}
 )
 
 Silinecek ID: 5
+Gelen ham veri: {"id":"6"}
+Çözümlenmiş veri: Array
+(
+    [id] => 6
+)
+
+Silinecek ID: 6
+Gelen ham veri: {"id":"1"}
+Çözümlenmiş veri: Array
+(
+    [id] => 1
+)
+
+Silinecek ID: 1
+Gelen ham veri: {"id":"2"}
+Çözümlenmiş veri: Array
+(
+    [id] => 2
+)
+
+Silinecek ID: 2
+Gelen ham veri: {"id":"3"}
+Çözümlenmiş veri: Array
+(
+    [id] => 3
+)
+
+Silinecek ID: 3
+Gelen ham veri: {"id":"7"}
+Çözümlenmiş veri: Array
+(
+    [id] => 7
+)
+
+Silinecek ID: 7
+Gelen ham veri: {"id":"8"}
+Çözümlenmiş veri: Array
+(
+    [id] => 8
+)
+
+Silinecek ID: 8

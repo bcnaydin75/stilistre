@@ -39,14 +39,13 @@ try {
     ");
     $latest_product = $latest_products_query->fetch(PDO::FETCH_ASSOC);
 
-    // --- Ürün Yönetimi verileri (Tüm Ürünler) ---
-    $all_products_query = $pdo->query("
-        SELECT p.id, p.product_name, p.price, p.stock, p.image_url, c.category_name
-        FROM products p
-        JOIN categories c ON p.category_id = c.id
-        ORDER BY p.id DESC
-    ");
-    $all_products = $all_products_query->fetchAll(PDO::FETCH_ASSOC);
+$all_products_query = $pdo->query("
+    SELECT p.id, p.product_name, p.price, p.discount_price, p.stock, p.brand, p.description, p.image_url, c.category_name
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    ORDER BY p.id DESC
+");
+$all_products = $all_products_query->fetchAll(PDO::FETCH_ASSOC);
 
     // --- Kategori Yönetimi verileri ---
     $all_categories_query = $pdo->query("
@@ -185,36 +184,39 @@ try {
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Ürün Görseli</th>
                                 <th>Ürün Adı</th>
+                                <th>Ürün Detayı</th>
+                                <th>Ürün Markası</th>
                                 <th>Kategori</th>
                                 <th>Fiyat</th>
+                                <th>İndirimli Fiyat</th>
                                 <th>Stok</th>
                                 <th>İşlemler</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (!empty($all_products)): ?>
-                                <?php foreach ($all_products as $product): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($product['id']); ?></td>
-                                        <td><img src="<?php echo htmlspecialchars($product['image_url']); ?>" class="w-10 h-10 object-cover rounded"></td>
-                                        <td><?php echo htmlspecialchars($product['product_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($product['category_name']); ?></td>
-                                        <td>₺<?php echo number_format($product['price'], 2, ',', '.'); ?></td>
-                                        <td><?php echo htmlspecialchars($product['stock']); ?></td>
-                                        <td class="action-buttons">
-                                            <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
-                                            <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="7" class="text-center">Henüz eklenmiş ürün bulunmamaktadır.</td>
-                                </tr>
-                            <?php endif; ?>
+                  <?php if (!empty($all_products)): ?>
+    <?php foreach ($all_products as $product): ?>
+        <tr>
+            <td><img src="<?php echo htmlspecialchars($product['image_url']); ?>" class="w-10 h-10 object-cover rounded"></td>
+            <td><?php echo htmlspecialchars($product['product_name']); ?></td>
+            <td class="description"><?php echo isset($product['description']) ? htmlspecialchars($product['description']) : '-'; ?></td>
+            <td><?php echo isset($product['brand']) ? htmlspecialchars($product['brand']) : '-'; ?></td>
+            <td><?php echo htmlspecialchars($product['category_name']); ?></td>
+            <td>₺<?php echo isset($product['price']) ? number_format($product['price'], 2, ',', '.') : '0,00'; ?></td>
+            <td>₺<?php echo isset($product['discount_price']) ? number_format($product['discount_price'], 2, ',', '.') : '0,00'; ?></td>
+            <td><?php echo isset($product['stock']) ? htmlspecialchars($product['stock']) : '0'; ?></td>
+            <td class="action-buttons">
+<button class="action-btn edit-btn" data-id="<?php echo htmlspecialchars($product['id']); ?>"  ><i class="fas fa-edit"></i></button>
+                <button class="action-btn delete-btn" data-id="<?php echo htmlspecialchars($product['id']); ?>" ><i class="fas fa-trash"></i></button>
+                
+            </td>
+        </tr>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+
                         </tbody>
                     </table>
                 </div>
@@ -267,7 +269,7 @@ try {
                     
                     <div class="form-group">
                         <label for="productImage">Ürün Görseli</label>
-                        <input type="file" id="productImage">
+<input type="file" id="productImage" accept="image/*">
                         <div class="image-preview">
                             <img id="previewImage" src="" alt="Önizleme">
                             <span id="noImageText">Görsel önizleme</span>
@@ -276,7 +278,7 @@ try {
                     
                     <div class="form-footer">
                         <button class="btn" style="background: #ccc;">İptal</button>
-                        <button class="btn btn-primary">Ürünü Ekle</button>
+<button class="btn btn-primary" id="submitProductBtn">Ürünü Ekle</button>
                     </div>
                 </div>
             </div>

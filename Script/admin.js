@@ -311,3 +311,119 @@ if (categoryAddForm) {
         }
     });
 }
+const submitProductBtn = document.getElementById('submitProductBtn');
+
+if (submitProductBtn) {
+    submitProductBtn.addEventListener('click', async () => {
+        const productName = document.getElementById('productName').value.trim();
+        const productCategory = document.getElementById('productCategory').value;
+        const productPrice = document.getElementById('productPrice').value.trim();
+        const productDiscount = document.getElementById('productDiscount').value.trim() || 0;
+        const productStock = document.getElementById('productStock').value.trim();
+        const productBrand = document.getElementById('productBrand').value.trim();
+        const productDescription = document.getElementById('productDescription').value.trim();
+        const productImageInput = document.getElementById('productImage');
+        const productImage = productImageInput.files[0];
+
+        if (!productName || !productCategory || !productPrice || !productStock || !productBrand || !productDescription || !productImage) {
+            alert("Lütfen tüm alanları doldurun ve görsel seçin.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('product_name', productName);
+        formData.append('category_id', productCategory);
+        formData.append('discount_price', productDiscount);
+        formData.append('stock', productStock); formData.append('price', productPrice);
+        formData.append('brand', productBrand);
+        formData.append('description', productDescription);
+        formData.append('image', productImage);
+
+        try {
+            const response = await fetch('../admin/add_product.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            // JSON olmayan yanıt geldiğinde bu satır hata verir
+            const resultText = await response.text();
+            try {
+                const result = JSON.parse(resultText);
+
+                if (result.success) {
+                    alert("Ürün başarıyla eklendi.");
+                    location.reload();
+                } else {
+                    alert("Ürün eklenemedi: " + (result.message || 'Bilinmeyen hata.'));
+                }
+
+            } catch (parseError) {
+                console.error("Geçersiz JSON yanıt:", resultText);
+                alert("Sunucudan beklenmeyen yanıt geldi.");
+            }
+
+        } catch (error) {
+            console.error("Fetch hatası:", error);
+            alert("Bir hata oluştu.");
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const confirmationBox = document.getElementById('deleteConfirmationBox'); // Onay kutusu div'in id'si
+    const confirmDeleteBtn = document.getElementById('confirmDelete');       // "Evet Sil" butonu
+    const cancelDeleteBtn = document.getElementById('cancelDelete');         // "İptal" butonu
+
+    let itemToDelete = null;  // Silinecek ürün bilgisi burada tutulacak
+
+    // Silme butonlarına tıklanınca
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const productId = button.getAttribute('data-id');
+            if (!productId) {
+                alert('Ürün ID bulunamadı!');
+                return;
+            }
+            // Silinecek ürün ve ilgili satırı bul
+            const row = button.closest('tr');
+            itemToDelete = { productId, row };
+
+            // Onay kutusunu göster
+            confirmationBox.style.display = 'flex';
+        });
+    });
+
+    // Onayla butonuna tıklandığında silme isteği gönder
+    confirmDeleteBtn.addEventListener('click', async () => {
+        if (!itemToDelete) return;
+
+        try {
+            const response = await fetch('delete_product.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'id=' + encodeURIComponent(itemToDelete.productId)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Başarılıysa satırı DOM'dan kaldır
+                if (itemToDelete.row) {
+                    itemToDelete.row.remove();
+                }
+                alert('Ürün başarıyla silindi.');
+            } else {
+            }
+        } catch (error) {
+            alert('Silme isteğinde hata oluştu: ' + error.message);
+        } finally {
+            confirmationBox.style.display = 'none';
+            itemToDelete = null;
+        }
+    });
+
+    // İptal butonu
+    cancelDeleteBtn.addEventListener('click', () => {
+        confirmationBox.style.display = 'none';
+        itemToDelete = null;
+    });
+});
